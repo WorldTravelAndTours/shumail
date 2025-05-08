@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer By Shumail</title>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(180deg, #73737362 0%, rgba(255, 255, 255, 1) 100%);
+        }
+        .main-menu {
+            width: 150px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 2px solid #000000;
+            box-shadow: -2px 2px 0px rgba(0, 0, 0, 1);
+            margin: 10px;
+            border-radius: 4px;
+        }
+        .dropdown-selection {
+            font-weight: bold;
+            margin-bottom: 30px;
+            background-color: rgb(224, 224, 224);
+            padding: 10px;
+            border: 2px solid #000000;
+            box-shadow: -2px 2px 0px rgba(0, 0, 0, 1);
+            border-radius: 4px;
+        }
+        .option {
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+        }
+        .disabled {
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            color: #00000046;
+        }
+        .disabled input {
+            pointer-events: none;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .question {
+            font-size: 32px;
+            font-weight: bold;
+            margin-top: 10px;
+            padding: 15px 50px;
+            background-color: rgb(224, 224, 224);
+            border: 2px solid #000000;
+            box-shadow: -2px 2px 0px rgba(0, 0, 0, 1);
+            border-radius: 4px;
+            display: flex;
+            gap: 15px;
+        }
+        .country
+        {
+            font-weight: bold;
+            font-size: 24px;
+            color: #0000009a;
+        }
+        .answers {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            padding-bottom: 200px;
+        }
+        .answers > div {
+            cursor: pointer;
+            margin: 5px;
+            text-align: center;
+            width: fit-content;
+            height: 50px;
+            background-color: rgb(224, 224, 224);
+            border: 2px solid #000000;
+            box-shadow: -2px 2px 0px rgba(0, 0, 0, 1);
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            padding: 0 20px;
+        }
+        .correct {
+            background-color: #a3f7a3 !important;
+        }
+        .wrong {
+            background-color: #f79a9a !important;
+        }
+        .button-style {
+            font-size: 24px;
+            padding: 10px 20px;
+            border: 2px solid #000000;
+            border-radius: 4px;
+            background-color: rgb(224, 224, 224);
+            box-shadow: -2px 2px 0px rgba(0, 0, 0, 1);
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+	.box-style {
+            border: 2px solid #000000;
+            border-radius: 4px;
+            background-color: rgb(224, 224, 224);
+            box-shadow: -2px 2px 0px rgba(0, 0, 0, 1);
+            cursor: pointer;
+        }
+
+        #showAnswerBtn {
+            width: 100%;
+            padding: 5px;
+            font-weight: bold;
+            background-color: rgb(224, 224, 224);
+            border: 2px solid #000000;
+            box-shadow: -2px 2px 0px rgba(0, 0, 0, 1);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="question" class="question">Loading...</div>
+        <div class="answers" id="answers"></div>
+    </div>
+    <div class="main-menu">
+        <div class="dropdown-selection">LEVEL 1</div>
+        <div class="option disabled">Practise <input type="checkbox" name="practise"></div>
+        <div class="option">Invert Options <input type="checkbox" name="invertoption"></div>
+        <div class="option disabled">Test Mode <input type="checkbox" name="testmode"></div>
+        <div class="option disabled">Show Mistakes <input type="checkbox" name="showmistakes"></div>
+        <div class="option disabled">Include Pre's <input type="checkbox" name="includepres"></div>
+        <div class="option disabled">Developer Mode <input type="checkbox" name="devmode"></div>
+        <div class="option">Show Countries <input type="checkbox" name="showcountries"></div>
+        <div class="option">Typed Answers <input type="checkbox" name="typedanswers" id="typedanswers"></div>
+        <div class="option"><button id="showAnswerBtn">Show Answer</button></div>
+    </div>
+
+    <script>
+        const topUKOutboundCities = {
+            'AMS': 'Amsterdam',
+            'CDG': 'Paris',
+            'FRA': 'Frankfurt',
+            'DUB': 'Dublin',
+            'BCN': 'Barcelona',
+            'MAD': 'Madrid',
+            'LIS': 'Lisbon',
+            'FCO': 'Rome',
+            'MXP': 'Milan',
+            'ATH': 'Athens',
+            'CPH': 'Copenhagen',
+            'ARN': 'Stockholm',
+            'OSL': 'Oslo',
+            'HEL': 'Helsinki',
+            'BRU': 'Brussels',
+            'VIE': 'Vienna',
+            'PRG': 'Prague',
+            'BUD': 'Budapest',
+            'WAW': 'Warsaw',
+            'ZRH': 'Zurich',
+            'GVA': 'Geneva',
+            'IST': 'Istanbul',
+            'DXB': 'Dubai',
+            'AUH': 'Abu Dhabi',
+            'DOH': 'Doha',
+            'JFK': 'New York',
+            'EWR': 'Newark',
+            'BOS': 'Boston',
+            'ORD': 'Chicago',
+            'LAX': 'Los Angeles',
+            'SFO': 'San Francisco',
+            'YYZ': 'Toronto',
+            'YVR': 'Vancouver',
+            'DEL': 'Delhi',
+            'BOM': 'Mumbai',
+            'HKG': 'Hong Kong',
+            'SIN': 'Singapore',
+            'KUL': 'Kuala Lumpur',
+            'BKK': 'Bangkok',
+            'SYD': 'Sydney',
+            'JNB': 'Johannesburg',
+            'CAI': 'Cairo',
+            'TLV': 'Tel Aviv',
+            'MEX': 'Mexico City',
+            'GRU': 'São Paulo',
+            'SCL': 'Santiago',
+            'EZE': 'Buenos Aires',
+            'NRT': 'Tokyo',
+            'ICN': 'Seoul'
+        };
+
+        const cityToCountry = {
+            'AMS': 'Netherlands',
+            'CDG': 'France',
+            'FRA': 'Germany',
+            'DUB': 'Ireland',
+            'BCN': 'Spain',
+            'MAD': 'Spain',
+            'LIS': 'Portugal',
+            'FCO': 'Italy',
+            'MXP': 'Italy',
+            'ATH': 'Greece',
+            'CPH': 'Denmark',
+            'ARN': 'Sweden',
+            'OSL': 'Norway',
+            'HEL': 'Finland',
+            'BRU': 'Belgium',
+            'VIE': 'Austria',
+            'PRG': 'Czech Republic',
+            'BUD': 'Hungary',
+            'WAW': 'Poland',
+            'ZRH': 'Switzerland',
+            'GVA': 'Switzerland',
+            'IST': 'Turkey',
+            'DXB': 'United Arab Emirates',
+            'AUH': 'United Arab Emirates',
+            'DOH': 'Qatar',
+            'JFK': 'USA',
+            'EWR': 'USA',
+            'BOS': 'USA',
+            'ORD': 'USA',
+            'LAX': 'USA',
+            'SFO': 'USA',
+            'YYZ': 'Canada',
+            'YVR': 'Canada',
+            'DEL': 'India',
+            'BOM': 'India',
+            'HKG': 'Hong Kong',
+            'SIN': 'Singapore',
+            'KUL': 'Malaysia',
+            'BKK': 'Thailand',
+            'SYD': 'Australia',
+            'JNB': 'South Africa',
+            'CAI': 'Egypt',
+            'TLV': 'Israel',
+            'MEX': 'Mexico',
+            'GRU': 'Brazil',
+            'SCL': 'Chile',
+            'EZE': 'Argentina',
+            'NRT': 'Japan',
+            'ICN': 'South Korea'
+        };
+    
+        const selectedOptions = {
+            practise: false,
+            invertoption: false,
+            testmode: false,
+            showmistakes: false,
+            includepres: false,
+            devmode: false,
+            showcountries: false,
+            typedanswers: false
+        };
+    
+        const questionEl = document.querySelector('.question');
+        const answersEl = document.querySelector('.answers');
+        const checkboxes = document.querySelectorAll('.option input');
+    
+        checkboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', () => {
+                selectedOptions[checkbox.name] = checkbox.checked;
+                if (checkbox.name === 'invertoption') {
+                    loadNewQuestion(); // Reload question when invert option changes
+                }else
+                {
+                    updateCurrentQuestion();
+                }
+            });
+        });
+    
+        function getRandomItem(obj) {
+            const keys = Object.keys(obj);
+            const randomKey = keys[Math.floor(Math.random() * keys.length)];
+            return { key: randomKey, value: obj[randomKey] };
+        }
+    
+        function shuffleArray(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+    
+        function loadNewQuestion() {
+            answersEl.innerHTML = ''; // Clear old answers
+    
+            const { key: correctKey, value: correctValue } = getRandomItem(topUKOutboundCities);
+            const allKeys = Object.keys(topUKOutboundCities);
+            const allValues = Object.values(topUKOutboundCities);
+    
+            let questionText = selectedOptions.invertoption ? correctKey : correctValue;
+            let correctAnswer = selectedOptions.invertoption ? correctValue : correctKey;
+            currentCorrectAnswer = correctAnswer;
+    
+            let displayCountry = selectedOptions.showcountries ? cityToCountry[correctKey] : '';
+            let countryDiv = displayCountry ? `<div class="country">${displayCountry}</div>` : '';
+
+            questionEl.innerHTML = selectedOptions.invertoption
+                ? `${correctKey}${countryDiv}`
+                : `${correctValue}${countryDiv}`;
+    
+                if (selectedOptions.typedanswers) {
+                    const inputBox = document.createElement('input');
+                    inputBox.type = 'text';
+                    inputBox.placeholder = 'Type your answer...';
+                    inputBox.style.fontSize = '24px';
+                    inputBox.style.padding = '10px';
+                    inputBox.style.border = '2px solid black';
+                    inputBox.style.borderRadius = '4px';
+		    inputBox.style.boxShadow = '-2px 2px 0px rgba(0, 0, 0, 1)'; 
+
+                    const submitBtn = document.createElement('button');
+                    submitBtn.textContent = 'Submit';
+                    submitBtn.classList.add('button-style');
+                    submitBtn.style.marginLeft = '10px';
+                    submitBtn.onclick = () => {
+                        if (inputBox.value.trim().toLowerCase() === correctAnswer.toLowerCase()) {
+                            inputBox.style.backgroundColor = '#a8f0a5';
+                            setTimeout(loadNewQuestion, 1000);
+                        } else {
+                            inputBox.style.backgroundColor = '#f8a5a5';
+                        }
+                    };
+
+                    inputBox.addEventListener('keyup', (event) => {
+                        if (event.key === 'Enter') {
+                            submitBtn.click();
+                            console.log("typed answers active");
+                        }
+                    });
+                    console.log("typed answers active2");
+                    answersEl.appendChild(inputBox);
+                    answersEl.appendChild(submitBtn);
+                    return;
+                }
+    
+            // Prepare 4 incorrect answers
+            const pool = selectedOptions.invertoption ? allValues : allKeys;
+            const incorrectAnswers = shuffleArray(pool.filter(item =>
+                item !== correctAnswer)).slice(0, 5);
+    
+            const options = shuffleArray([correctAnswer, ...incorrectAnswers]);
+    
+            options.forEach(option => {
+                const btn = document.createElement('div');
+                btn.className = 'answer1'; // styling is the same for all
+                btn.textContent = option;
+                btn.addEventListener('click', () => {
+                    if (option === correctAnswer) {
+                        btn.style.backgroundColor = '#a8f0a5';
+                        setTimeout(loadNewQuestion, 1000);
+                    } else {
+                        btn.style.backgroundColor = '#f8a5a5';
+                        // Highlight correct
+                        [...answersEl.children].forEach(el => {
+                            if (el.textContent === correctAnswer) {
+                                el.style.backgroundColor = '#a8f0a5';
+                            }
+                        });
+                    }
+                });
+                answersEl.appendChild(btn);
+            });
+        }
+
+        function updateCurrentQuestion() {
+            const allKeys = Object.keys(topUKOutboundCities);
+            const allValues = Object.values(topUKOutboundCities);
+
+            // Ensure that currentCorrectAnswer is always updated before being used
+            let questionText;
+            let correctKey;
+
+            if (selectedOptions.invertoption) {
+                questionText = currentCorrectAnswer ? currentCorrectAnswer : '';
+                correctKey = Object.keys(topUKOutboundCities).find(k => topUKOutboundCities[k] === currentCorrectAnswer);
+            } else {
+                questionText = topUKOutboundCities[currentCorrectAnswer];
+                correctKey = currentCorrectAnswer;
+            }
+
+            let displayCountry = selectedOptions.showcountries ? cityToCountry[correctKey] : '';
+            let countryDiv = displayCountry ? `<div class="country">${displayCountry}</div>` : '';
+
+            questionEl.innerHTML = selectedOptions.invertoption
+                ? `${correctKey}${countryDiv}`
+                : `${questionText}${countryDiv}`;
+
+            answersEl.innerHTML = '';
+
+            if (selectedOptions.typedanswers) {
+                const inputBox = document.createElement('input');
+                inputBox.type = 'text';
+                inputBox.placeholder = 'Type your answer...';
+                inputBox.style.fontSize = '24px';
+                inputBox.style.padding = '10px';
+                inputBox.style.border = '2px solid black';
+                inputBox.style.borderRadius = '4px';
+		inputBox.style.boxShadow = '-2px 2px 0px rgba(0, 0, 0, 1)';
+
+                const submitBtn = document.createElement('button');
+                submitBtn.textContent = 'Submit';
+                submitBtn.classList.add('button-style');
+                submitBtn.style.marginLeft = '10px';
+                submitBtn.onclick = () => {
+                    const userAnswer = inputBox.value.trim().toLowerCase();
+                    const correct = selectedOptions.invertoption
+                        ? topUKOutboundCities[correctKey].toLowerCase()
+                        : correctKey.toLowerCase();
+
+                    if (userAnswer === correct) {
+                        inputBox.style.backgroundColor = '#a8f0a5';
+                        setTimeout(loadNewQuestion, 1000);
+                    } else {
+                        inputBox.style.backgroundColor = '#f8a5a5';
+                    }
+                };
+
+                answersEl.appendChild(inputBox);
+                answersEl.appendChild(submitBtn);
+            } else {
+                const pool = selectedOptions.invertoption ? allValues : allKeys;
+                const correctAnswer = selectedOptions.invertoption ? topUKOutboundCities[correctKey] : correctKey;
+                const incorrectAnswers = shuffleArray(pool.filter(item =>
+                    item !== correctAnswer)).slice(0, 4);
+
+                const options = shuffleArray([correctAnswer, ...incorrectAnswers]);
+
+                options.forEach(option => {
+                    const btn = document.createElement('div');
+                    btn.className = 'answer1';
+                    btn.textContent = option;
+                    btn.addEventListener('click', () => {
+                        if (option === correctAnswer) {
+                            btn.style.backgroundColor = '#a8f0a5';
+                            setTimeout(loadNewQuestion, 1000);
+                        } else {
+                            btn.style.backgroundColor = '#f8a5a5';
+                            [...answersEl.children].forEach(el => {
+                                if (el.textContent === correctAnswer) {
+                                    el.style.backgroundColor = '#a8f0a5';
+                                }
+                            });
+                        }
+                    });
+                    answersEl.appendChild(btn);
+                });
+            }
+        }
+
+        let currentCorrectAnswer = '';  // Move this above
+
+        // Initial question
+        loadNewQuestion();
+
+
+        document.getElementById('showAnswerBtn').addEventListener('click', () => {
+            alert("Correct Answer: " + currentCorrectAnswer);
+        });
+    </script>
+</body>
+</html>
